@@ -291,7 +291,21 @@ public class Menu extends JPanel{
         ai.setAbility(new Ghost());
         ai.setTurningSpeed(angleSlider.getValue());
         game.addWorm(ai);
-
+        ai = new WormBot();
+        ai.setColor(Color.green);
+        ai.setAbility(new Ghost());
+        ai.setTurningSpeed(angleSlider.getValue());
+        game.addWorm(ai);
+        ai = new WormBot();
+        ai.setColor(Color.blue);
+        ai.setAbility(new Ghost());
+        ai.setTurningSpeed(angleSlider.getValue());
+        game.addWorm(ai);
+        ai = new WormBot();
+        ai.setColor(Color.yellow);
+        ai.setAbility(new Ghost());
+        ai.setTurningSpeed(angleSlider.getValue());
+        game.addWorm(ai);
 
         initializeWorms();
 

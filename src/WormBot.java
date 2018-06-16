@@ -83,62 +83,29 @@ public class WormBot extends Worm
 				return (o1.getValue() < o2.getValue()) ? 1 : -1;
 			}
 		});
-		System.out.println("----------------------");
-		for (Pair<Double, Double> p: distanceList) {
-			//System.out.println(p.getKey().toString() + "  " + p.getValue().toString());
-
-		}
-		System.out.println("----------------------------------");
-		System.out.println(distanceList.get(0).getKey());
 		if (distanceList.get(0).getKey() > 0) {
 			this.turnRight();
 		}
 		else if (distanceList.get(0).getKey() < 0) {
 			this.turnLeft();
 		}
-		//turningAngle = distanceList.get(0).getKey();
-		//System.out.println(turningAngle);
+
 		if (turningAngle <= 0) turningAngle += Math.PI*2;
 		else if (turningAngle >= Math.PI*2) turningAngle -= Math.PI*2;
-
-		/*switch (botState) {
-		    case Corner:
-				System.out.println("corner");
-
-
-				break;
-
-	    	case Normal:
-				if (dist0 < 150) {
-		    		if (distL20 < dist0 && distR20 < dist0 && distL45 < distL20 && distR45 < distR20) {
-						botState = State.Corner;
-		    	break;
-		}
-		    else if ((distL20 < dist0 && dist0 < distR20) || distL20 < 30) {
-			this.turnRight();
-		    }
-		    else if ((distL20 > dist0 && dist0 > distR20) || distR20 < 30) {
-			this.turnLeft();
-		    }
-
-		}
-		else
-		    setTurn('F');
-
-
-
-		break;
-	    case Wall:
-		break;
-
-	}*/
-
-	//String out = "(" + distL20 + "," + dist0 + "," + distR20 + ")";
-	//System.out.println(out);
-
-
+		
     }
 
+    private boolean collides(Position p, int size) {
+
+		for (int y = (int)p.getY() - size/2; y < p.getY() + size/2; y++) {
+    		for (int x = (int)p.getX() - size/2; x < p.getX() + size/2; x++) {
+				if (Settings.backBuffer.isOutOfBounds(x, y) || Settings.backBuffer.getScreen().getRGB(x, y) != Color.BLACK.getRGB()) {
+					return true;
+				}
+			}
+		}
+    	return false;
+	}
 
     private double advancedDistanceToWall(double angle) {
     	double dist = 0;
@@ -158,10 +125,23 @@ public class WormBot extends Worm
 	else
 	    dir = -1;
 
-	while (!Settings.backBuffer.isOutOfBounds((int)p.getX(),(int)p.getY()) &&
-	        	Settings.backBuffer.getScreen().getRGB((int)p.getX(),(int)p.getY()) == Color.BLACK.getRGB() &&
-	                	dist < range) {
+	//while (!Settings.backBuffer.isOutOfBounds((int)p.getX(),(int)p.getY()) &&
+	//        	Settings.backBuffer.getScreen().getRGB((int)p.getX(),(int)p.getY()) == Color.BLACK.getRGB() &&
+	//                	dist < range) {
+		while (dist < 5) {
+			p.setPosition(p.getX()+this.getSpeed()*Math.cos(currentAngle),p.getY()+this.getSpeed()*Math.sin(currentAngle));
+			if (dist > 5)
+				trailList.add(new Position(p));
 
+			dist+= speed;
+			speed = 0.1d;
+			if (Math.abs(currentAngle-angle) > min) {
+				currentAngle += dir*this.turningSpeed;
+				speed = this.getSpeed();
+			}
+		}
+
+	while (!collides(p, this.size-2) && dist < range) {
 	    p.setPosition(p.getX()+this.getSpeed()*Math.cos(currentAngle),p.getY()+this.getSpeed()*Math.sin(currentAngle));
 	    if (dist > 5)
 	    	trailList.add(new Position(p));
@@ -193,16 +173,16 @@ public class WormBot extends Worm
 		/*g.setColor(Color.BLACK);
 		for (Position p: prev_trailList) {
 			g.fillRect((int) p.getX(), (int) p.getY(), 1, 1);
-		}
-*/
+		}*/
+
     	super.draw(g);
 
 		// Draw new trails
 		/*g.setColor(Color.WHITE);
 		for (Position p: trailList) {
 			g.fillRect((int) p.getX(), (int) p.getY(), 1, 1);
-		}
-*/
+		}*/
+
 	}
 
 }

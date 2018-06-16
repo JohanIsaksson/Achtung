@@ -29,7 +29,10 @@ public class ScoreBoard extends JPanel
         int tempHeight = (int)Settings.ScreenSize.getHeight()/8;
         for (int i = 0; i < wormList.size(); i++) {
             labelList[i] = new JLabel();
-            labelList[i].setText("Player" + (i + 1) + ": 0");
+            if (wormList.get(i) instanceof WormBot)
+                labelList[i].setText("AI" + (i + 1) + ": 0");
+            else if (wormList.get(i) instanceof Worm)
+                labelList[i].setText("Player" + (i + 1) + ": 0");
 	    int width = 200;
 	    int height = 100;
             labelList[i].setBounds(10,(i+1)*margins+i*tempHeight, width, height);
@@ -63,7 +66,10 @@ public class ScoreBoard extends JPanel
 
     public void updateScore(ArrayList<Worm> wormList){ //the wormlist is an arraylist, not a java.util.list, but im not sure of the differences.
         for (int i = 0; i < labelList.length ; i++) {
-            labelList[i].setText("Player: " + wormList.get(i).getPoints());
+            if (wormList.get(i) instanceof WormBot)
+                labelList[i].setText("AI: " + wormList.get(i).getPoints());
+            else if (wormList.get(i) instanceof Worm)
+                labelList[i].setText("Player: " + wormList.get(i).getPoints());
         }
     }
 }
